@@ -33,7 +33,7 @@ class App extends React.Component {
       return <CardEditor switchMode={this.switchMode} addCard={this.addCard} cards={this.state.cards} deleteCard={this.deleteCard}/>;
     }
     else{
-      return <CardViewer switchMode={this.switchMode} />
+      return <CardViewer cards={this.state.cards} switchMode={this.switchMode} />
     }
   }
 }

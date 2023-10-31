@@ -8,6 +8,10 @@ class CardEditor extends React.Component {
     }
 
     addCard = () => {
+        if ((this.state.front.trim() === "") || (this.state.back.trim() === "")){
+            alert("front or back fields must not be empty!")
+            return
+        }
         this.props.addCard(this.state);
         this.setState({ front: '', back: '' });
     }
