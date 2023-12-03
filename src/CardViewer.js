@@ -1,55 +1,94 @@
 import React from 'react';
 import './CardViewer.css';
-import {Link} from 'react-router-dom';
+
+import { Link, withRouter } from 'react-router-dom';
+import { firebaseConnect, isLoaded, isEmpty } from 'react-redux-firebase';
+import { connect } from 'react-redux';
+import { compose } from 'redux';
 
 class CardViewer extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      currentIndex: 0,
+      displayFront: true,
+    };
+  }
 
-    constructor(props) {
-        super(props)
-        this.state = {
-            index: 0,
-            showFront: true,
-            cards: this.props.cards,
-        }
+  nextCard = () => {
+    if (this.state.currentIndex < this.props.cards.length - 1) {
+      this.setState({
+        currentIndex: this.state.currentIndex + 1,
+        displayFront: true,
+      });
+    }
+  };
+
+  prevCard = () => {
+    if (this.state.currentIndex > 0) {
+      this.setState({
+        currentIndex: this.state.currentIndex - 1,
+        displayFront: true,
+      });
+    }
+  };
+
+  flipCard = () => this.setState({ displayFront: !this.state.displayFront });
+
+  render() {
+    if (!isLoaded(this.props.cards)) {
+      return <div>Loading...</div>;
     }
 
-    nextCard = () => {
-        this.setState({ index: this.state.index + 1})
+    if (isEmpty(this.props.cards)) {
+      return <div>Page not found!</div>;
     }
 
-    prevCard = () => {
-        this.setState({ index: this.state.index - 1})
-    }
-    
-    flipCard = () => {
-        this.setState({ showFront: !this.state.showFront })
-    }
+    // this uses the ternary operator:
+    // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Conditional_Operator
+    const card = this.props.cards[this.state.currentIndex][
+      this.state.displayFront ? 'front' : 'back'
+    ];
 
-    render() {
-        return (
-            <div>
-                <h2>Card Viewer</h2>
-                <table>
-                    <thead>
-                        <tr>
-                            <th>{this.state.showFront ? "Front" : "Back"}</th>
-                        </tr>
-                        <td onClick={this.flipCard} className="flashcard">{
-                            this.state.showFront ? this.state.cards[this.state.index].front : this.state.cards[this.state.index].back}</td>
-                        <tr>
-                            <th><button disabled={this.state.index <= 0} id="prev" onClick={this.prevCard}>Previous Card</button>
-                <button disabled={this.state.index >= this.state.cards.length - 1} id="next" onClick={this.nextCard}>Next Card</button></th>
-                        </tr>
-                        <tr>
-                            <th>Progress: {this.state.index + 1} / {this.state.cards.length}</th>
-                        </tr>
-                    </thead>
-                </table>
-                <hr />
-                <Link to="/editor">Go to card editor</Link>
-            </div>
-        );
-    }
+    return (
+      <div>
+        <h2>{this.props.name}</h2>
+        Card {this.state.currentIndex + 1} out of {this.props.cards.length}.
+        <div className="card" onClick={this.flipCard}>
+          {card}
+        </div>
+        <br />
+        <button
+          disabled={this.state.currentIndex === 0}
+          onClick={this.prevCard}
+        >
+          Prev card
+        </button>
+        <button
+          disabled={this.state.currentIndex === this.props.cards.length - 1}
+          onClick={this.nextCard}
+        >
+          Next card
+        </button>
+        <hr />
+        <Link to="/">Home</Link>
+      </div>
+    );
+  }
 }
 
-export default CardViewer
+const mapStateToProps = (state, props) => {
+  const deck = state.firebase.data[props.match.params.deckId];
+  const name = deck && deck.name;
+  const cards = deck && deck.cards;
+  return { cards: cards, name: name };
+};
+
+export default compose(
+  withRouter,
+  firebaseConnect(props => {
+    const deckId = props.match.params.deckId;
+    return [{ path: `/flashcards/${deckId}`, storeAs: deckId }];
+  }),
+  connect(mapStateToProps),
+)(CardViewer);
