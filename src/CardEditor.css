@@ -1,3 +1,11 @@
+body {
+  font-family: Arial, Helvetica, sans-serif;
+  background-color: #a3b4e3;
+  text-align: center;
+  margin: auto;
+  display: center;
+}
+
 table,
 td,
 th {
@@ -6,9 +14,60 @@ th {
 
 table {
   border-collapse: collapse;
+  margin: auto;
 }
 
-td,
-th {
-  padding: 10px;
-}
+.card {
+    border: 1px solid black;
+    min-width: 200px;
+    text-align: center;
+    margin-left: 25%;
+    padding: 50px;
+    margin-right: 25%;
+    margin-top: 5%;
+    margin-bottom: 5%;
+    background-color: white;
+  }
+
+  .other {
+    background-color: green; /* Green */
+    border: 1px solid black;
+    color: white;
+    padding: 10px 20px;
+    margin: 1%;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+  }
+
+  .delete {
+    background-color: #791513; /* Green */
+    border: 1px solid black;
+    color: white;
+    padding: 3px 8px;
+    margin: 1%;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+  }
+  
+  .card:hover {
+    cursor: pointer;
+  }
+
+  button:hover{
+    background-color: darkgreen;
+    cursor:pointer;
+  }
+
+  .delete:hover{
+    background-color: darkred;
+    cursor:pointer;
+  }
+
+  .link{
+    color: black;
+    font-size: large;
+  }

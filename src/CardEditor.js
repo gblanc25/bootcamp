@@ -45,7 +45,9 @@ class CardEditor extends React.Component {
     const newDeck = { cards: this.state.cards, name: this.state.name };
     updates[`/flashcards/${deckId}`] = newDeck;
     updates[`/homepage/${deckId}`] = { name: this.state.name };
-    const onComplete = () => this.props.history.push(`/viewer/${deckId}`);
+    const onComplete = () => {
+      this.props.history.push(`/viewer/${deckId}`);
+      this.props.history.push(`/`);}
     this.props.firebase.update(`/`, updates, onComplete);
   };
 
@@ -56,7 +58,7 @@ class CardEditor extends React.Component {
           <td>{card.front}</td>
           <td>{card.back}</td>
           <td>
-            <button onClick={() => this.deleteCard(index)}>Delete card</button>
+            <button class="delete" onClick={() => this.deleteCard(index)}>Delete card</button>
           </td>
         </tr>
       );
@@ -98,10 +100,10 @@ class CardEditor extends React.Component {
           placeholder="Back of card"
           value={this.state.back}
         />
-        <button onClick={this.addCard}>Add card</button>
+        <button class="other" onClick={this.addCard}>Add card</button>
         <hr />
         <div>
-          <button
+          <button class="other"
             disabled={!this.state.name.trim() || this.state.cards.length === 0}
             onClick={this.createDeck}
           >

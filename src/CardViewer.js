@@ -25,7 +25,7 @@ class CardViewer extends React.Component {
   };
 
   prevCard = () => {
-    if (this.state.currentIndex > 0) {
+    if (this.state.currentIndex > 0) { 
       this.setState({
         currentIndex: this.state.currentIndex - 1,
         displayFront: true,
@@ -64,14 +64,14 @@ class CardViewer extends React.Component {
         >
           Prev card
         </button>
-        <button
+        <button 
           disabled={this.state.currentIndex === this.props.cards.length - 1}
           onClick={this.nextCard}
         >
           Next card
         </button>
         <hr />
-        <Link to="/">Home</Link>
+        <Link class="link" to="/">Home</Link>
       </div>
     );
   }
